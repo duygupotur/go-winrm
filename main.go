@@ -1,13 +1,12 @@
 package main
 
 import (
-	"encoding/base64"
 	"fmt"
-	"github.com/masterzen/winrm"
-	"golang.org/x/text/encoding/unicode"
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/masterzen/winrm"
 )
 
 //InitWinRMShell InitWinRMShell
@@ -63,14 +62,21 @@ func main() {
 	}
 
 	// Run command
-	encoder := unicode.UTF16(unicode.LittleEndian, unicode.IgnoreBOM).NewEncoder()
-	encoded, _ := encoder.String(command)
-	command = base64.StdEncoding.EncodeToString([]byte(encoded))
+	// encoder := unicode.UTF16(unicode.LittleEndian, unicode.IgnoreBOM).NewEncoder()
+	// encoded, _ := encoder.String(command)
+	// command = base64.StdEncoding.EncodeToString([]byte(encoded))
 
-	stdout, stderr, _, err := connection.RunWithString("powershell.exe -encodedCommand "+command, "")
+	stdout, stderr, _, err := connection.RunWithString("powershell.exe -command "+command, "")
 	// stdout, stderr, _, err := connection.RunWithString("powershell.exe -encodedCommand "+command, "")
+	if err != nil {
+		fmt.Println("err")
+		fmt.Println(err)
+	} else if stderr != "" {
+		fmt.Println("stderr")
+		fmt.Println(stderr)
+	} else {
+		fmt.Println("stdout")
 	fmt.Println(stdout)
-	fmt.Println(stderr)
-	fmt.Println(err)
+	}
 
 }
